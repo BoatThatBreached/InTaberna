@@ -1,0 +1,41 @@
+package com.company;
+
+import java.util.Random;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        Random rand = new Random();
+        int N = 0;
+        boolean st_ask = false;
+        while (!st_ask) {
+            System.out.println("Please, insert length of the Array:");
+
+            N = scan.nextInt();
+            if (N < 3) {
+                continue;
+            } else {
+                st_ask = true;
+            }
+
+        }
+        int[] list = new int[N];
+        for (int i = 0; i < list.length; i++) {
+            list[i]= rand.nextInt(N);
+            System.out.print(list[i] + " ");
+        }
+        System.out.println();
+        for(int i = 0; i < list.length; i++){
+            if ((list[i] %2)==0) {
+                System.out.print(list[i] + " ");
+            }
+        }
+    }
+}
+
+
+
+
+
+
