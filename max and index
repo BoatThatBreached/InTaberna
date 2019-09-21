@@ -4,14 +4,10 @@ public class Main {
         Random rand = new Random();
         int minA = -15;
         int [] A = new int [12];
+        int maxAll = -15;
+        int numb = 0;
         for (int i = 0; i<A.length; i++){
             A[i] = rand.nextInt(31) + minA;
-            //System.out.println(A[i]);
-        }
-        System.out.println();
-        int maxAll = A[0];
-        int numb = 0;
-        for (int i = 0; i <A.length; i++){
             if(A[i] >= maxAll){
                 maxAll = A[i];
                 numb = i;
