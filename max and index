@@ -8,11 +8,13 @@ public class Main {
         int numb = 0;
         for (int i = 0; i<A.length; i++){
             A[i] = rand.nextInt(31) + minA;
+            //System.out.print(A[i] + " ");
             if(A[i] >= maxAll){
                 maxAll = A[i];
                 numb = i;
             }
         }
+        //System.out.println();
         System.out.println("Max element equals " + maxAll + " with the index of " + numb);
-        }
     }
+}
