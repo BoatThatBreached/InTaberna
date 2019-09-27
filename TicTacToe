@@ -5,94 +5,114 @@ import java.util.Scanner;
 
 public class Main {
 
-    public static boolean check(char [][] arr){
-        for (int i = 0; i <3; i ++){
-            if(arr[i][0] == arr[i][1]& arr[i][1] == arr[i][2]&(arr[i][2] == 'O'||arr[i][2] == 'X')){
-                return true;
-            }
-            if(arr[0][i] == arr[1][i]& arr[1][i] == arr[2][i]&(arr[1][i] == 'O'||arr[1][i] == 'X')){
-                return true;
-            }
 
-
-        }
-        if (arr[0][0] == arr[1][1]&arr[1][1] == arr[2][2]&(arr[2][2] == 'O'||arr[2][2] == 'X')){
-            return true;
-        }
-        if (arr[2][0] == arr[1][1]&arr[1][1] == arr[0][2]&(arr[1][1] == 'O'||arr[1][1] == 'X')){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-    public static void refresh(char [][] arr, int xpos, int ypos, int turn){
-        if(arr[xpos][ypos]== '_'){
-            char [] chos = {'X', 'O'};
-            for(int x = 0; x<3; x++){
-                for (int y = 0; y<3; y++){
-                    arr[xpos][ypos] = chos[turn%2];
+    static void refresh(char [][] arr, int xpos, int ypos, int turn, int w, int h, int towin){
+        if(arr[xpos][ypos]== '-') {
+            char[] chos = {'X', 'O'};
+            for (int x = 0; x < w; x++) {
+                for (int y = 0; y < h; y++) {
+                    arr[xpos][ypos] = chos[turn % 2];
                     System.out.print(arr[x][y] + " ");
                 }
                 System.out.println();
             }
-            if (check(arr) == true){
-                System.out.println(chos[turn%2] + "-player wins!");
 
+            if (check(trans(arr, w, h), w, h, towin) == -1) {
+                System.out.println("O-player wins!");
             }
-            boolean draw = false;
-            for (int row = 0; row<3; row++){
-                for(int column = 0; column <3; column++){
-                    if(arr[row][column] != '_'){
-                        draw = true;
-                    }
-                    else{
-                        draw = false;
-                        break;
-                    }
-                }
+            if (check(trans(arr, w, h), w, h, towin) == 1) {
+                System.out.println("X-player wins!");
             }
-            if (draw == true){
-                System.out.println("Draw, you're both loosers!");
+            if (check(trans(arr, w, h), w, h, towin) == 0) {
+                ask(arr, turn + 1, w, h, towin);
             }
-            else {ask(arr, turn +1);}
-
         }
         else{
             System.out.println("Occupied!");
-            ask(arr, turn);
+            ask(arr, turn, w, h, towin);
         }
 
     }
-    public static void ask(char[][] list, int queue){
+    static int check(int [][] arr, int w, int h, int towin){
+        int sumy = 0;
+        int sumx = 0;
+        for (int x = 0; x <w; x ++){
+            for (int y = 0; y <h; y ++){
+                sumy += arr[x][y];
+                if (sumy == -towin || sumy == towin){
+                    System.out.println(sumy);
+                    return sumy/towin;
+                }
+            }
+        }
+        for (int y = 0; y <h; y ++){
+            for (int x = 0; x <w; x ++){
+                sumx += arr[x][y];
+                if (sumx == -towin || sumx == towin){
+                    System.out.println(sumx);
+                    return sumx/towin;
+                }
+            }
+        }
+        return 0;
+
+    }
+    static void ask(char[][] list, int queue, int w, int h, int towin){
         Scanner scan = new Scanner(System.in);
         System.out.println("Set position for your mark:");
         int x = scan.nextInt();
         int y = scan.nextInt();
-        if (x>-1&x<3&y>-1&y<3){
+        if (x>-1&x<w&y>-1&y<h){
 
-            refresh(list, x,y,queue);
+            refresh(list, x,y,queue, w, h, towin);
         }
         else{
             System.out.println("Bad position!");
-            ask(list, queue);
+            ask(list, queue, w, h, towin);
         }
 
+    }
+    static int[][] trans(char[][] arr, int w, int h){
+        int [][] ret = new int[w][h];
+        for(int x = 0; x <w; x++){
+            for(int y = 0; y <h; y++){
+                switch(arr[x][y]){
+                    case '-':
+                        ret[x][y] = 0;
+                        System.out.print(ret[x][y] + " ");
+                    case 'X':
+                        ret[x][y] = 1;
+                        System.out.print(ret[x][y] + " ");
+                    case 'O':
+                        ret[x][y] = -1;
+                        System.out.print(ret[x][y] + " ");
+                }
+
+            }
+            System.out.println();
+        }
+        return ret;
     }
     public static void main(String[] args) {
         int q = 0;
         Random rand = new Random();
+        System.out.println("Set the size of the board");
+        Scanner scan = new Scanner(System.in);
 
-        char [][] field = new char [3][3];
-        for(int x = 0; x<3; x++){
-            for (int y = 0; y<3; y++){
-                field[x][y] = '_';
+        int w = scan.nextInt();
+        int h = scan.nextInt();
+        System.out.println("Set the number of marks in a row to win");
+        int towin1 = scan.nextInt();
+        char [][] field = new char [w][h];
+        for(int x = 0; x<w; x++){
+            for (int y = 0; y<h; y++){
+                field[x][y] = '-';
                 System.out.print(field[x][y] + " ");
             }
             System.out.println();
 
 
         }
-        ask(field, q);
+        ask(field, q, w, h, towin1);
     }
 }
