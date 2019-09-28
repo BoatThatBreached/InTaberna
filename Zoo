@@ -1,0 +1,82 @@
+package Animals;
+
+public class Animal{
+    String AnimalType;
+    void move(){
+        System.out.println(AnimalType + " wanders");
+    }
+    void sleep(){
+        System.out.println(AnimalType + " is zzzzzzzing");
+    }
+    void multiply() throws InterruptedException {
+        System.out.println(AnimalType + " loves");
+        Thread.sleep(1000);
+        System.out.println("The beautiful " + AnimalType + " was born!");
+    }
+
+}
+package Animals;
+
+public class Predator extends Animal {
+    void hunt(){
+        System.out.println(AnimalType + " kills pure victims");
+    }
+    void sharpenclaws() throws  InterruptedException{
+        System.out.println(AnimalType + " prepares to kill pure victims...");
+        Thread.sleep(1000);
+        System.out.println("Beware the mighty " + AnimalType + "!");
+    }
+
+
+}
+package Animals;
+
+public class herbivores extends Animal {
+    void feed(){
+        System.out.println(" is feeding ");
+    }
+}
+package Animals;
+
+public class Cat extends Predator {
+    void meow(){
+        System.out.println(AnimalType + " says meeooow");
+    }
+    public Cat(){
+        this.AnimalType = "cat";
+        move();
+        try {
+            multiply();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try {
+            sharpenclaws();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        meow();
+        hunt();
+    }
+}
+package Animals;
+
+public class Dog extends Predator {
+    void bark(){
+        System.out.println(AnimalType +" says bark-bark!");
+    }
+    void vagthetail(){
+        System.out.println(AnimalType + " is wigging the tail");
+    }
+    public Dog(){
+        this.AnimalType = "dog";
+        move();
+        try {
+            multiply();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        bark();
+    }
+
+}
