@@ -1,13 +1,22 @@
 package com.company;
 
 import Game.TicTacToe;
-
+import Game.Game;
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in);
+        Game game = new Game();
+
+    }
+}
+package Game;
+
+import java.util.Scanner;
+
+public class Game {
+    public Game(){Scanner scan = new Scanner(System.in);
 
         System.out.println("Insert field width and height");
         int w = scan.nextInt();
@@ -18,7 +27,6 @@ public class Main {
         boolean win = false;
         game.print();
         while(!win){
-
             game.input();
             game.print();
             if (game.check().charAt(0) == 'X'){
@@ -33,13 +41,9 @@ public class Main {
                 System.out.println("Draw! You're both losers!");
                 win = true;
             }
-        }
-    }
+        }}
+
 }
-
-
-
-
 package Game;
 
 import java.util.Scanner;
@@ -77,11 +81,11 @@ public class TicTacToe {
             }
             else{
                 if (turn%2 ==  0){
-                field[x][y] = -1;
-            }
-            else{
-                field[x][y] = 1;
-            }
+                    field[x][y] = -1;
+                }
+                else{
+                    field[x][y] = 1;
+                }
             }
 
         }
@@ -137,7 +141,7 @@ public class TicTacToe {
             }
             sumy = 0;
         }
-       for(int i = 0; i< 2*Math.max(height,width) -1 + Math.abs(width-height);i++){
+        for(int i = 0; i< 2*Math.max(height,width) -1 + Math.abs(width-height);i++){
             for(int w = 0; w<width;w++){
                 for(int h = 0; h<height;h++){
                     if(w+h == i){
@@ -154,23 +158,24 @@ public class TicTacToe {
             }
             sumd = 0;
         }
-//        for(int i = 0; i< 2*Math.max(height,width) -1 + Math.abs(width-height);i++){
-//            for(int h = height; h<0;h--){
-//                for(int w = width; w<0;w--){
-//                    if(w+h== i){
-//                        sumd+=field[w][h];
-//                    }
-//                    if(sumd==towin){
-//                        return "X";
-//                    }
-//                    if(sumd==-towin){
-//                        return "O";
-//                    }
-//                }
-//
-//            }
-//            sumd = 0;
-//        }
+        for(int i = 0; i< 2*Math.max(height,width) -1 + Math.abs(width-height);i++){
+            for(int w = 0; w<width;w++){
+                for(int h = 0; h<height;h++){
+                    if(Math.abs(w-h) == i){
+                        sumd+=field[w][h];
+                    }
+                    if(sumd==towin){
+                        return "X";
+                    }
+                    if(sumd==-towin){
+                        return "O";
+                    }
+                }
+
+            }
+            sumd = 0;
+        }
+        for(int a = 0; a<10; a++){}
         boolean draw = true;
         for(int i = 0; i<height;i++){
             for(int q = 0; q<width;q++){
