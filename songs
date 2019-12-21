@@ -1,0 +1,118 @@
+package com.example.lessoncountlez;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Bundle;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        RecyclerView recycler = (RecyclerView) findViewById(R.id.recycler);
+        List<Song> songs = new ArrayList<>();
+        for (int i = 0; i<100; i++){
+            songs.add(new Song(R.drawable.ic_launcher_background, "Ben Howard", "Conrad", "october " + i, (i%10)/2));
+        }
+        recycler.setLayoutManager(new LinearLayoutManager(this));
+        recycler.setAdapter(new SongAdapter(this, songs));
+    }
+}
+
+package com.example.lessoncountlez;
+
+public class Song {
+    private int album;
+    private String dropped;
+    private String artist;
+    private String name;
+    private float rate;
+
+    public int getAlbum(){
+        return this.album;
+    }
+    public float getRate(){
+        return this.rate;
+    }
+    public String getDropped(){
+        return  this.dropped;
+    }
+    public String getArtist(){
+        return  this.artist;
+    }
+    public String getName(){
+        return this.name;
+    }
+    public Song(int album, String artist,  String name, String dropped, int rate){
+        this.album = album;
+        this.artist = artist;
+        this.name = name;
+        this.dropped = dropped;
+        this.rate = rate;
+    }
+}
+
+package com.example.lessoncountlez;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
+
+public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
+    private LayoutInflater inflater;
+    private List<Song> songs;
+
+    SongAdapter(Context context, List<Song> songs) {
+        this.songs = songs;
+        this.inflater = LayoutInflater.from(context);
+    }
+    @Override
+    public SongAdapter.SongHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        View view = inflater.inflate(R.layout.item, parent, false);
+        return new SongHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(SongAdapter.SongHolder holder, int position) {
+        Song song = songs.get(position);
+        holder.album.setImageResource(song.getAlbum());
+        holder.artist.setText(song.getArtist());
+        holder.name.setText(song.getName());
+        holder.dropped.setText(song.getDropped());
+        holder.rate.setRating(song.getRate());
+    }
+
+    @Override
+    public int getItemCount() {
+        return songs.size();
+    }
+    public class SongHolder extends RecyclerView.ViewHolder{
+        final ImageView album;
+        final TextView name, artist, dropped;
+        final RatingBar rate;
+        SongHolder(View view){
+            super(view);
+            album = (ImageView)view.findViewById(R.id.album);
+            artist = (TextView) view.findViewById(R.id.artist);
+            name = (TextView) view.findViewById(R.id.name);
+            dropped = (TextView) view.findViewById(R.id.dropped);
+            rate = (RatingBar) view.findViewById(R.id.rate);
+    }
+}}
+
