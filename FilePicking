@@ -1,0 +1,157 @@
+public class MainActivity extends AppCompatActivity {
+
+    static TextView tv;
+    static ArrayList<String> list;
+    
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Button choosing = (Button) findViewById(R.id.choosing);
+        final Context context = this;
+        tv = (TextView) findViewById(R.id.tv);
+        list = new ArrayList<>();
+
+        choosing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.setType("text/*");
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                startActivityForResult(intent, 12);
+            }});
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 12) {
+            // Get the Uri of the selected file
+            Uri uri = data.getData();
+            LaterFunction(uri);
+        }
+    }
+    // 3. Later here
+    public void LaterFunction(Uri uri) {
+        BufferedReader br;
+        try {
+            br = new BufferedReader(new InputStreamReader(getContentResolver().openInputStream(uri)));
+
+            String line = null;
+            String ans = "";
+            int i = 1;
+            while ((line = br.readLine()) != null) {
+                if(line.equals("")){
+                    list.add(ans + " " + i);
+
+                    i++;
+                    ans = "";
+                }
+                else{
+                ans += line;
+                ans += "\n";}
+
+            }
+
+            br.close();
+            list.add(ans + " " + i);
+            Intent next = new Intent(this, ActivityParagraphs.class);
+            next.putStringArrayListExtra("list", list);
+            startActivity(next);
+            list.clear();
+        } catch (Throwable t){
+            Toast.makeText(this, t.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+}
+
+public class ActivityParagraphs extends AppCompatActivity {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.list_activity);
+        ListView lv = (ListView) findViewById(R.id.lv);
+        ArrayList<String> listL = getIntent().getStringArrayListExtra("list");
+
+        Adapter cAdapter = new Adapter(this, R.layout.para, listL);
+        lv.setAdapter(cAdapter);
+
+    }
+
+}
+
+public class Adapter extends ArrayAdapter<String> {
+
+    private int resourceLayout;
+    private Context mContext;
+
+    public Adapter(Context context, int para, List<String> paras) {
+        super(context, para, paras);
+        this.resourceLayout = para;
+        this.mContext = context;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+        View v = convertView;
+
+        if (v == null) {
+            LayoutInflater vi;
+            vi = LayoutInflater.from(mContext);
+            v = vi.inflate(resourceLayout, null);
+        }
+
+        final String s = getItem(position);
+
+        if (s != null) {
+            TextView paragraph_number = (TextView) v.findViewById(R.id.paragraph_number);
+            TextView textPreview = (TextView) v.findViewById(R.id.textPreview);
+            Button more = (Button) v.findViewById(R.id.more);
+            final String number = "Paragraph " + s.split(" ")[s.split(" ").length-1];
+            paragraph_number.setText(number);
+            final String txtPreview = s.substring(0, s.lastIndexOf(' '));
+            String threeParas = "";
+            try{
+                 threeParas = txtPreview.split("\n")[0] + "\n" + txtPreview.split("\n")[1] +"\n"+txtPreview.split("\n")[2];
+                        }
+            catch (Exception e){
+                try{
+                    threeParas = txtPreview.split("\n")[0] +"\n"+ txtPreview.split("\n")[1];
+                }
+                catch (Exception ee){
+                    try{
+                        threeParas = txtPreview.split("\n")[0];
+                    }
+                    catch (Exception eee){
+
+                    }
+                }
+            }
+
+            textPreview.setText(threeParas);
+            more.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent next = new Intent(mContext, ActivityFull.class);
+                    next.putExtra("Text", txtPreview);
+                    next.putExtra("Number", number);
+                    mContext.startActivity(next);
+                }
+            });
+        }
+
+        return v;
+    }
+
+}
+
+public class ActivityFull  extends AppCompatActivity {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.full);
+        TextView number = (TextView) findViewById(R.id.paragraph_number_full);
+        number.setText(getIntent().getStringExtra("Number"));
+        TextView paragraph = (TextView) findViewById(R.id.paragraph);
+        paragraph.setText(getIntent().getStringExtra("Text"));
+    }
+}
